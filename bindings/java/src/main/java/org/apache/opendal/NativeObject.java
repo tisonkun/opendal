@@ -19,7 +19,6 @@
 
 package org.apache.opendal;
 
-import io.questdb.jar.jni.JarJniLoader;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class NativeObject implements AutoCloseable {
@@ -43,7 +42,7 @@ public abstract class NativeObject implements AutoCloseable {
         }
 
         if (libraryLoaded.compareAndSet(LibraryState.NOT_LOADED, LibraryState.LOADING)) {
-            JarJniLoader.loadLib(NativeObject.class, "/native", "opendal_java");
+            NativeLoader.loadLibrary(NativeLoader.LIBNAME);
             libraryLoaded.set(LibraryState.LOADED);
             return;
         }
