@@ -43,12 +43,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '8'
           cache: 'maven'
       - name: Build and test
         working-directory: bindings/java
         run: mvn clean verify
+
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          cache: 'maven'
+      - name: Stage snasphot
+        working-directory: bindings/java
+        run: mvn -Papache-release package verify org.sonatype.plugins:nexus-staging-maven-plugin:deploy -DaltStagingDirectory=local-staging -DskipRemoteStaging=true
+
+      - name: Upload local staging directory
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-local-staging
+          path: bindings/java/local-staging
+          if-no-files-found: error
