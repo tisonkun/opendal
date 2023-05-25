@@ -77,5 +77,11 @@ if __name__ == '__main__':
         dst.parent.mkdir(exist_ok=True, parents=True)
         shutil.copy2(src, dst)
     else:  # cross
-
-        pass
+        print('compiling for x86_64-unknown-linux-gnu')
+        subprocess.run([
+            'cross', 'build', '--color=always', '--release', '--target', 'x86_64-unknown-linux-gnu',
+        ], cwd=binding_root)
+        src = opendal_root / 'target' / 'release' / get_cargo_artifact_name('linux', 'x86_64')
+        dst = binding_root / 'target' / 'classes' / 'native' / get_jni_library_name('linux', 'x86_64')
+        dst.parent.mkdir(exist_ok=True, parents=True)
+        shutil.copy2(src, dst)

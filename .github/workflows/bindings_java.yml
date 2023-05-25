@@ -43,12 +43,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '8'
           cache: 'maven'
       - name: Build and test
         working-directory: bindings/java
         run: mvn clean verify
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          cache: 'maven'
+      - name: Install cross-rs
+        run: cargo install cross --git https://github.com/cross-rs/cross
+      - name: Cross compile
+        working-directory: bindings/java
+        run: mvn clean compile -Dnative.compile.mode=cross

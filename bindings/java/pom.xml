@@ -53,6 +53,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <native.compile.mode>local</native.compile.mode>
+
         <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
 
@@ -115,14 +117,14 @@
                 <version>${exec-maven-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>compile-local</id>
+                        <id>compile-rust-code</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                         <configuration>
                             <executable>${project.basedir}/tools/build.py</executable>
-                            <arguments>local</arguments>
+                            <arguments>${native.compile.mode}</arguments>
                         </configuration>
                     </execution>
                 </executions>
