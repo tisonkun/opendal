@@ -77,11 +77,16 @@ if __name__ == '__main__':
         dst.parent.mkdir(exist_ok=True, parents=True)
         shutil.copy2(src, dst)
     else:  # cross
-        print('compiling for x86_64-unknown-linux-gnu')
-        subprocess.run([
-            'cross', 'build', '--color=always', '--release', '--target', 'x86_64-unknown-linux-gnu',
-        ], cwd=binding_root)
-        src = opendal_root / 'target' / 'x86_64-unknown-linux-gnu' / 'release' / get_cargo_artifact_name('linux', 'x86_64')
-        dst = binding_root / 'target' / 'classes' / 'native' / get_jni_library_name('linux', 'x86_64')
-        dst.parent.mkdir(exist_ok=True, parents=True)
-        shutil.copy2(src, dst)
+        def cross(target, os, arch):
+            print(f'compiling for {target}')
+            subprocess.run([
+                'cross', 'build', '--color=always', '--release', '--target', target,
+            ], cwd=binding_root)
+            src = opendal_root / 'target' / target / 'release' / get_cargo_artifact_name(os, arch)
+            dst = binding_root / 'target' / 'classes' / 'native' / get_jni_library_name(os, arch)
+            dst.parent.mkdir(exist_ok=True, parents=True)
+            shutil.copy2(src, dst)
+
+        cross('x86_64-unknown-linux-gnu', 'linux', 'x86_64')
+        cross('x86_64-apple-darwin', 'darwin', 'x86_64')
+        cross('x86_64-pc-windows-gnu', 'windows', 'x86_64')
