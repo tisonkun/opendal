@@ -88,5 +88,4 @@ if __name__ == '__main__':
             shutil.copy2(src, dst)
 
         cross('x86_64-unknown-linux-gnu', 'linux', 'x86_64')
-        cross('x86_64-apple-darwin', 'darwin', 'x86_64')
         cross('x86_64-pc-windows-gnu', 'windows', 'x86_64')
