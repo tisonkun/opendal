@@ -54,7 +54,10 @@ jobs:
         run: mvn clean verify
 
   snapshot:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 8
@@ -69,6 +72,6 @@ jobs:
       - name: Upload local staging directory
         uses: actions/upload-artifact@v3
         with:
-          name: linux-local-staging
+          name: ${{ matrix.os }}-local-staging
           path: bindings/java/local-staging
           if-no-files-found: error
